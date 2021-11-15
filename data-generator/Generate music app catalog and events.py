@@ -66,7 +66,12 @@ import json
 
 # COMMAND ----------
 
-file_path = "abfss://data@dltdemostorage.dfs.core.windows.net/musicapp_lakehouse/"
+# Change STORAGE_ACCOUNT to your storage account name
+STORAGE_ACCOUNT="musicapp<storageaccountname>"
+
+# COMMAND ----------
+
+file_path = f"abfss://data@{STORAGE_ACCOUNT}.dfs.core.windows.net/musicapp_lakehouse/"
 
 # COMMAND ----------
 
@@ -187,14 +192,17 @@ display(source_schema)
 
 # COMMAND ----------
 
-# Get Databricks secret value 
-connSharedAccessKeyName = "adbSendMusicAppListenEvents"
-connSharedAccessKey = dbutils.secrets.get(scope = "adls_creds", key = "ehSendMusicAppListenEventsAccessKey")
+EH_NAMESPACE = "musicapp-<eventhubname>"
+EH_KAFKA_TOPIC = "music-listen-events"
 
 # COMMAND ----------
 
-EH_NAMESPACE = "dlt-demo-eh"
-EH_KAFKA_TOPIC = "music-listen-events"
+# Get Databricks secret value 
+connSharedAccessKeyName = "adbSendMusicAppEvents"
+connSharedAccessKey = dbutils.secrets.get(scope = "access_creds", key = f"ehSend{EH_NAMESPACE}AccessKey")
+
+# COMMAND ----------
+
 EH_BOOTSTRAP_SERVERS = f"{EH_NAMESPACE}.servicebus.windows.net:9093"
 EH_SASL = f"kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$ConnectionString\" password=\"Endpoint=sb://{EH_NAMESPACE}.servicebus.windows.net/;SharedAccessKeyName={connSharedAccessKeyName};SharedAccessKey={connSharedAccessKey};EntityPath={EH_KAFKA_TOPIC}\";"
 
@@ -216,3 +224,7 @@ write = (source_schema.writeStream
     .option("checkpointLocation", f"/tmp/{EH_NAMESPACE}/{EH_KAFKA_TOPIC}/{datetime_checkpoint}/_checkpoint")
     .trigger(processingTime='10 seconds')
     .start())
+
+# COMMAND ----------
+
+
