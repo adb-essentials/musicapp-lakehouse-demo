@@ -41,6 +41,8 @@ databricks workspace list
 
 ### Create secrets scope to be used for ADLS and Event Hubs access keys
 
+Create a Databricks secrets scope called `access_creds`. If sharing a workspace the scope might already exist.  
+
 ```
 databricks secrets create-scope --scope access_creds
 ```
