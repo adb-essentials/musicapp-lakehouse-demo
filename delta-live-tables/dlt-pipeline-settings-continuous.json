@@ -1,6 +1,6 @@
 {
-    "name": "ADB - Music App Streaming Demo",
-    "storage": "abfss://data@musicapp<storageaccountname>.dfs.core.windows.net/dlt_musicapp_lakehouse/",
+    "name": "Music App Streaming Demo <USERNAME>",
+    "storage": "abfss://data@musicapp<storageaccountname>.dfs.core.windows.net/dlt_musicapp_lakehouse_<USERNAME>/",
     "configuration": {
         "pipelines.useV2DetailsPage": "false"
     },
@@ -38,7 +38,7 @@
             }
         }
     ],
-    "target": "dlt_musicapp_lakehouse",
+    "target": "dlt_musicapp_lakehouse_<USERNAME>",
     "continuous": true,
     "development": true
 }
