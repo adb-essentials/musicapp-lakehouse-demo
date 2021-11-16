@@ -139,3 +139,7 @@ spark.conf.set('latest_update.id', latest_update_id)
 # MAGIC GROUP BY
 # MAGIC   row_expectations.dataset,
 # MAGIC   row_expectations.name
+
+# COMMAND ----------
+
+
