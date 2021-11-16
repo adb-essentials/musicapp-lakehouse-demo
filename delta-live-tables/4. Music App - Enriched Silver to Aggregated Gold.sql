@@ -1,18 +1,10 @@
 -- Databricks notebook source
--- show tables in dlt_musicapp_lakehouse
-
--- COMMAND ----------
-
--- select * from dlt_musicapp_lakehouse.musicapp_events_enriched_silver
-
--- COMMAND ----------
-
 -- select 
 --   user_country 
 --   , artist_name
 --   , count(user_id) as total_listens
 --   , count(distinct user_id) as unique_listens
--- from dlt_musicapp_lakehouse.musicapp_events_enriched_silver
+-- from dlt_musicapp_lakehouse_<USERNAME>.musicapp_events_enriched_silver
 -- group by 
 --   user_country 
 --   , artist_name
