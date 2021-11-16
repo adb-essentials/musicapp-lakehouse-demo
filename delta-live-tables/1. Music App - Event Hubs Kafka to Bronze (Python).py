@@ -22,15 +22,6 @@ EH_SASL = f"kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule 
 
 # COMMAND ----------
 
-# # Event Hubs Kafka Connection
-# connSharedAccessKey = dbutils.secrets.get(scope = "adls_creds", key = "eventHubKafkaKey")
-
-# TOPIC = "music-listen-events"
-# BOOTSTRAP_SERVERS = "tfayyaz-kafka.servicebus.windows.net:9093"
-# EH_SASL = "kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$ConnectionString\" password=\"Endpoint=sb://tfayyaz-kafka.servicebus.windows.net/;SharedAccessKeyName=KafkaSendListen;SharedAccessKey=" + connSharedAccessKey + "\";"
-
-# COMMAND ----------
-
 stream_musicapp_events_kafka_raw = (spark.readStream
     .format("kafka")
     .option("subscribe", EH_KAFKA_TOPIC)
