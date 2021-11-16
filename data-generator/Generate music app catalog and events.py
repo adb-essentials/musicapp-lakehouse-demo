@@ -45,6 +45,14 @@ file_path = f"abfss://data@{STORAGE_ACCOUNT}.dfs.core.windows.net/musicapp_lakeh
 
 # COMMAND ----------
 
+import pandas as pd
+pdf = pd.read_csv("https://raw.githubusercontent.com/adb-essentials/musicapp-lakehouse-demo/master/data-generator/data/musicapp_catalog_001.csv")
+
+df_catalog = spark.createDataFrame(pdf)
+display(df_catalog)
+
+# COMMAND ----------
+
 # select columns for ADLS and cast song_id as integer
 from pyspark.sql.types import IntegerType,BooleanType,DateType
 
