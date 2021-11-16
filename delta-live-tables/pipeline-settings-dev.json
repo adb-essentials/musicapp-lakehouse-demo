@@ -1,0 +1,44 @@
+{
+    "name": "ADB - Music App Streaming Demo",
+    "storage": "abfss://data@musicapptfayyaz.dfs.core.windows.net/dlt_musicapp_lakehouse_tfayyaz/",
+    "configuration": {
+        "pipelines.useV2DetailsPage": "false"
+    },
+    "clusters": [
+        {
+            "label": "default",
+            "spark_conf": {
+                "spark.hadoop.fs.azure.account.key.musicapptfayyaz.dfs.core.windows.net": "{{secrets/access_creds/adlsmusicapptfayyazAccessKey}}"
+            },
+            "autoscale": {
+                "min_workers": 1,
+                "max_workers": 5
+            }
+        }
+    ],
+    "libraries": [
+        {
+            "notebook": {
+                "path": "/Repos/tahir.fayyaz@databricks.com/musicapp-lakehouse-demo/delta-live-tables/1. Music App - Event Hubs Kafka to Bronze (Python)"
+            }
+        },
+        {
+            "notebook": {
+                "path": "/Repos/tahir.fayyaz@databricks.com/musicapp-lakehouse-demo/delta-live-tables/2. Music App - Catalog ADLS Auto Loader to Bronze (Python)"
+            }
+        },
+        {
+            "notebook": {
+                "path": "/Repos/tahir.fayyaz@databricks.com/musicapp-lakehouse-demo/delta-live-tables/3. Music App - Join Bronze to Enriched Silver (SQL)"
+            }
+        },
+        {
+            "notebook": {
+                "path": "/Repos/tahir.fayyaz@databricks.com/musicapp-lakehouse-demo/delta-live-tables/4. Music App - Enriched Silver to Aggregated Gold"
+            }
+        }
+    ],
+    "target": "dlt_musicapp_lakehouse_tfayyaz",
+    "continuous": true,
+    "development": true
+}
