@@ -169,7 +169,7 @@ Listen key:
 export LISTEN_KEY_NAME=ehListen"${EH_NAMESPACE}"AccessKey
 export LISTEN_PRIMARY_KEY=$(az eventhubs eventhub authorization-rule keys list --namespace-name $EH_NAMESPACE --eventhub-name $EH_KAFKA_TOPIC --name adbListenMusicAppEvents --query 'primaryKey' --output tsv)
 
-databricks secrets put --scope access_creds --key LISTEN_KEY_NAME --string-value $LISTEN_PRIMARY_KEY
+databricks secrets put --scope access_creds --key $LISTEN_KEY_NAME --string-value $LISTEN_PRIMARY_KEY
 ```
 
 ## Set up Databricks Cluster

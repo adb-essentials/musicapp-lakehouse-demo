@@ -19,48 +19,6 @@ import json
 
 # COMMAND ----------
 
-# # music catalog
-# musicCatalog = [
-#     [10001, u'Damian Marley', u'Album 1', u'Welcome to Jamrock'],
-#     [10002, u'Gorillaz', u'Album 2', u'Feel Good Inc.'],
-#     [10002, u'Amy Winehouse', u'Album 3', u'Back to Black'],
-#     [10003, u'Radiohead', u'Album 4', u'Pyramid Song'],
-#     [10004, u'LCD Soundsystem', u'Album 5', u'Daft Punk is Playing at My House'],
-#     [20001, u'LCD Soundsystem', u'Daft Punk is Playing at My House', u'Daft Punk is Playing at My House'],
-#     [20002, u'LCD Soundsystem', u'Daft Punk is Playing at My House', u'Daft Punk Is Playing At My House (Soulwax Shibuya Mix)'],
-#     [20003, u'Damian Marley', u'Welcome To Jamrock', u'Confrontation'],
-#     [20004, u'Damian Marley', u'Welcome To Jamrock', u'There For You'],
-#     [20005, u'Damian Marley', u'Welcome To Jamrock', u'Welcome To Jamrock'],
-#     [20006, u'Damian Marley', u'Welcome To Jamrock', u'The Master Has Come Back'],
-#     [20007, u'Damian Marley', u'Welcome To Jamrock', u'All Night'],
-#     [20008, u'Damian Marley', u'Welcome To Jamrock', u'Beautiful'],
-#     [20009, u'Damian Marley', u'Welcome To Jamrock', u'Pimpas Paradise'],
-#     [20010, u'Damian Marley', u'Welcome To Jamrock', u'Move!'],
-#     [20011, u'Damian Marley', u'Welcome To Jamrock', u'For The Babies'],
-#     [20012, u'Damian Marley', u'Welcome To Jamrock', u'Hey Girl'],
-#     [20013, u'Damian Marley', u'Welcome To Jamrock', u'Road To Zion'],
-#     [20014, u'Damian Marley', u'Welcome To Jamrock', u'Were Gonna Make It'],
-#     [20015, u'Damian Marley', u'Welcome To Jamrock', u'In 2 Deep'],
-#     [20016, u'Damian Marley', u'Welcome To Jamrock', u'Khaki Suit'],
-#     [20017, u'Gorillaz', u'Demon Days', u'Intro'],
-#     [20018, u'Gorillaz', u'Demon Days', u'Last Living Souls'],
-#     [20019, u'Gorillaz', u'Demon Days', u'Kids With Guns'],	
-#     [20020, u'Gorillaz', u'Demon Days', u'O Green World'],	
-#     [20021, u'Gorillaz', u'Demon Days', u'Dirty Harry'],	
-#     [20022, u'Gorillaz', u'Demon Days', u'Feel Good Inc.'],	
-#     [20023, u'Gorillaz', u'Demon Days', u'El Manana'],	
-#     [20024, u'Gorillaz', u'Demon Days', u'Every Planet We Reach Is Dead'],	
-#     [20025, u'Gorillaz', u'Demon Days', u'November Has Come'],	
-#     [20026, u'Gorillaz', u'Demon Days', u'All Alone'],	
-#     [20027, u'Gorillaz', u'Demon Days', u'White Light'],	
-#     [20028, u'Gorillaz', u'Demon Days', u'Dare'],	
-#     [20029, u'Gorillaz', u'Demon Days', u'Fire Coming Out Of The Monkeys Head'],
-#     [20030, u'Gorillaz', u'Demon Days', u'Dont Get Lost In Heaven'],	
-#     [20031, u'Gorillaz', u'Demon Days', u'Demon Days']
-# ]
-
-# COMMAND ----------
-
 # MAGIC %md
 # MAGIC ## Define file path for all generated data to be stored
 
@@ -69,8 +27,6 @@ import json
 # Change STORAGE_ACCOUNT to your storage account name
 STORAGE_ACCOUNT="musicapp<storageaccountname>"
 
-# COMMAND ----------
-
 file_path = f"abfss://data@{STORAGE_ACCOUNT}.dfs.core.windows.net/musicapp_lakehouse/"
 
 # COMMAND ----------
@@ -78,14 +34,9 @@ file_path = f"abfss://data@{STORAGE_ACCOUNT}.dfs.core.windows.net/musicapp_lakeh
 # MAGIC %md
 # MAGIC ## Upload Music App Catalog CSV to ADLS
 # MAGIC 
-# MAGIC - Download Music App Catalog CSV file from github repo
-# MAGIC - Go to ADLS storage account and create new directories `/musicapp_lakehouse/staging/music_catalog`
-# MAGIC - Upload the CSV `musicapp_catalog_001.csv` to `/musicapp_lakehouse/staging/music_catalog`
-# MAGIC - Check the file was uploaded correctrly using the command below
-
-# COMMAND ----------
-
-dbutils.fs.ls(f"{file_path}/staging/musicapp_catalog")
+# MAGIC - Read Music App Catalog CSV file from github repo as pandas DataFrame
+# MAGIC - Convert Pandas DataFrame to Spark DataFrame
+# MAGIC - Write Spark DataFrame as one JSON file to ADLS to be read by Delta Live Tables pipeline
 
 # COMMAND ----------
 
@@ -94,15 +45,7 @@ dbutils.fs.ls(f"{file_path}/staging/musicapp_catalog")
 
 # COMMAND ----------
 
-# read data from staging
-df_catalog = (spark.read
-               .option("header", True)
-               .csv(f"{file_path}/staging/musicapp_catalog"))
-
-display(df_catalog)
-
-# COMMAND ----------
-
+# select columns for ADLS and cast song_id as integer
 from pyspark.sql.types import IntegerType,BooleanType,DateType
 
 df = (df_catalog.select(["song_id", "artist_name", "album_name", "song_name"])
@@ -112,12 +55,7 @@ display(df)
 
 # COMMAND ----------
 
-# df = spark.createDataFrame(musicCatalog, ["song_id", "artist_name", "album_name", "song_name"])
-# display(df)
-
-# COMMAND ----------
-
-# Write Dataframe as JSON file to landing zone
+# Write Dataframe as one JSON file to landing zone in ADLS
 df.coalesce(1).write.mode("overwrite").json(file_path + '/landing/musicapp_catalog')
 
 # COMMAND ----------
@@ -193,7 +131,7 @@ display(source_schema)
 # COMMAND ----------
 
 EH_NAMESPACE = "musicapp-<eventhubname>"
-EH_KAFKA_TOPIC = "music-listen-events"
+EH_KAFKA_TOPIC = "musicapp-events"
 
 # COMMAND ----------
 
@@ -224,7 +162,3 @@ write = (source_schema.writeStream
     .option("checkpointLocation", f"/tmp/{EH_NAMESPACE}/{EH_KAFKA_TOPIC}/{datetime_checkpoint}/_checkpoint")
     .trigger(processingTime='10 seconds')
     .start())
-
-# COMMAND ----------
-
-

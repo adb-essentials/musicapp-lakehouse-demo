@@ -1,15 +1,14 @@
 {
-    "id": "05a06cd1-3f8b-42e0-8f5f-5a7fc5c949e2",
     "name": "ADB - Music App Streaming Demo",
-    "storage": "abfss://data@dltdemostorage.dfs.core.windows.net/dlt_musicapp_lakehouse/",
+    "storage": "abfss://data@musicapp<storageaccountname>.dfs.core.windows.net/dlt_musicapp_lakehouse/",
     "configuration": {
-        "pipelines.useV2DetailsPage": "true"
+        "pipelines.useV2DetailsPage": "false"
     },
     "clusters": [
         {
             "label": "default",
             "spark_conf": {
-                "spark.hadoop.fs.azure.account.key.dltdemostorage.dfs.core.windows.net": "{{secrets/adls_creds/adlsDltDemoStorageAccessKey}}"
+                "spark.hadoop.fs.azure.account.key.musicapp<storageaccountname>.dfs.core.windows.net": "{{secrets/access_creds/adls<STORAGE_ACCOUNT>AccessKey}}"
             },
             "autoscale": {
                 "min_workers": 1,

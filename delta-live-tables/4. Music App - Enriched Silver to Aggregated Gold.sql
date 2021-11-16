@@ -33,7 +33,8 @@ from live.events_enriched_silver
 group by 
   user_country 
   , artist_name
-order by unique_listens desc 
+order by unique_listens desc
+limit 100
 
 -- COMMAND ----------
 
@@ -53,6 +54,7 @@ group by
   , song_name
   , artist_name
 order by unique_listens desc 
+limit 100
 
 -- COMMAND ----------
 
@@ -71,4 +73,5 @@ group by
   user_country 
   , album_name
   , artist_name
-order by unique_listens desc 
+order by unique_listens desc
+limit 100
