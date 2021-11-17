@@ -1,4 +1,4 @@
-# Set up Azure enviroment
+# Set up Azure environment
 
 This guide contains the following steps to set up your enviroment for all the demos in this repo.
 

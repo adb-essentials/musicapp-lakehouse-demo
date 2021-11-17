@@ -1,12 +1,12 @@
 # Music App Lakehouse demo on Azure Databricks
 
-Follow the instructions in [set up enviroment](SET-UP-ENVIROMENT.md) to create all required resources in Azure and Azure Databricks to run the demo.
+Follow the instructions in [set up environment](SET-UP-ENVIRONMENT.md) to create all required resources in Azure and Azure Databricks to run the demo.
 
 ![Azure Databricks E2E - DLT & Power BI.png](images/Azure-Databrick-DLT-Power-BI.png)
 
 ## Delta Live Tables demo
 
-Once all resources have you been created from [set up enviroment](SET-UP-ENVIROMENT.md) follow these steps to run the demo.
+Once all resources have you been created from [set up environment](SET-UP-ENVIRONMENT.md) follow these steps to run the demo.
 
 - Generate data in ADLS and Event Hubs Kafka topic using [data-generator](/data-generator).
 - Modify the notebooks in [delta-live-tables](/delta-live-tables) to use the correct config values.
